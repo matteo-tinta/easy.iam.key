@@ -9,5 +9,7 @@ $containerName="builder-go"
 docker build . -t ${containerName} --target builder
 $containerId = docker create -it --rm ${containerName}
 
-docker cp ${containerId}:/app/generate ./bin/generate
+docker cp ${containerId}:/app/generate ./bin/
+docker cp ${containerId}:/app/generate.amd64 ./bin/
+docker cp ${containerId}:/app/generate.exe ./bin/
 docker rm ${containerId}

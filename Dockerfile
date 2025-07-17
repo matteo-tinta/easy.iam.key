@@ -22,6 +22,8 @@ RUN go mod download
 
 # Build statically-linked binary
 RUN CGO_ENABLED=0 GOOS=linux go build -o generate
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w -extldflags=-static" -o generate.amd64
+RUN GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="-s -w -extldflags=-static" -o generate.exe
 
 # Stage 2: Copy to scratch (final minimal image)
 FROM scratch
