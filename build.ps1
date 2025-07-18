@@ -12,4 +12,7 @@ $containerId = docker create -it --rm ${containerName}
 docker cp ${containerId}:/app/generate ./bin/
 docker cp ${containerId}:/app/generate.amd64 ./bin/
 docker cp ${containerId}:/app/generate.exe ./bin/
+docker cp ${containerId}:/app/decode ./bin/
+docker cp ${containerId}:/app/decode.amd64 ./bin/
+docker cp ${containerId}:/app/decode.exe ./bin/
 docker rm ${containerId}

@@ -21,9 +21,13 @@ RUN tar -xf app.tar --strip-components=1 -C ./
 RUN go mod download
 
 # Build statically-linked binary
-RUN CGO_ENABLED=0 GOOS=linux go build -o generate
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w -extldflags=-static" -o generate.amd64
-RUN GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="-s -w -extldflags=-static" -o generate.exe
+RUN CGO_ENABLED=0 GOOS=linux go build -o generate ./cmd/generate
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w -extldflags=-static" -o generate.amd64 ./cmd/generate
+RUN GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="-s -w -extldflags=-static" -o generate.exe ./cmd/generate
+
+RUN CGO_ENABLED=0 GOOS=linux go build -o decode ./cmd/decode
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w -extldflags=-static" -o decode.amd64 ./cmd/decode
+RUN GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="-s -w -extldflags=-static" -o decode.exe ./cmd/decode
 
 # Stage 2: Copy to scratch (final minimal image)
 FROM scratch
@@ -31,6 +35,6 @@ FROM scratch
 WORKDIR /root/
 
 COPY --from=builder /app/generate .
-# RUN chmod +x ./generate
+COPY --from=builder /app/decode .
 
 CMD ["./generate"]
